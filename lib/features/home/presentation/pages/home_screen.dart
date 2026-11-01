@@ -18,19 +18,19 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ১. হেডার
+              // 1. Header
               const HomeHeader(),
               const SizedBox(height: 16),
 
-              // ২. ইসলামিক ডেট ব্যানার
+              // 2. Islamic Date Banner
               const IslamicDateBanner(),
               const SizedBox(height: 20),
 
-              // ৩. নামাজের সময় সেকশন
+              // 3. Prayer Times Section
               const PrayerTimesSection(),
               const SizedBox(height: 24),
 
-              // পরবর্তী ধাপে এখানে ৮টি ফিচার গ্রিড যুক্ত হবে
+              // 4. Features Grid
             ],
           ),
         ),

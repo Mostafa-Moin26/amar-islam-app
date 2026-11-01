@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'app_fonts.dart';
 
 abstract final class AppSpacing {
   static const double xs = 4;
@@ -201,7 +202,8 @@ abstract final class AppTheme {
             height: 1.4,
             color: AppColors.textSecondary,
           ),
-        );
+        )
+        .apply(fontFamily: AppFonts.bengali);
 
     // ----------------------------------------------------------
     // 4. COMMON BORDER RADIUS

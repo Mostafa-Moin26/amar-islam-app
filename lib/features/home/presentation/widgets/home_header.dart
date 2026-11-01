@@ -2,84 +2,112 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_theme.dart';
+import '../../../../core/constants/app_strings.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  const HomeHeader({this.onSettingsTap, super.key});
+
+  final VoidCallback? onSettingsTap;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        // বামপাশে স্পিরিচুয়াল মসজিদ/চাঁদ আইকন অবতার
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: AppColors.softSage,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: AppColors.deepGreen.withValues(alpha: 0.15),
-              width: 1.5,
-            ),
-          ),
-          child: const Center(
-            child: Icon(
-              Icons.mosque_rounded,
-              color: AppColors.deepGreen,
-              size: 24,
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
+    final textTheme = Theme.of(context).textTheme;
 
-        // শুভেচ্ছা ও বার্তা
-        const Expanded(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _buildAppIcon(),
+
+        const SizedBox(width: AppSpacing.lg),
+
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'আসসালামু আলাইকুম',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                AppStrings.homeGreeting,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.titleMedium?.copyWith(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
                   color: AppColors.textPrimary,
+                  height: 1.4,
                 ),
               ),
-              SizedBox(height: 2),
+
+              const SizedBox(height: AppSpacing.xs),
+
               Text(
-                'আল্লাহর স্মরণে থাকি',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
+                AppStrings.homeGreetingSubtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.bodySmall?.copyWith(
+                  fontSize: 12,
                   fontWeight: FontWeight.w400,
+                  color: AppColors.textSecondary,
+                  height: 1.4,
                 ),
               ),
             ],
           ),
         ),
 
-        // ডানপাশে সেটিংস/নোটিফিকেশন বাটন
-        InkWell(
-          onTap: () {
-            // সেটিংস পেজের রাউট পরে যুক্ত করা হবে
-          },
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.divider),
-            ),
+        const SizedBox(width: AppSpacing.sm),
+
+        _buildSettingsButton(),
+      ],
+    );
+  }
+
+  Widget _buildAppIcon() {
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: AppColors.softSage,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: AppColors.deepGreen.withValues(alpha: 0.12),
+          width: 1,
+        ),
+      ),
+      alignment: Alignment.center,
+      child: const Icon(
+        Icons.mosque_rounded,
+        color: AppColors.deepGreen,
+        size: 25,
+      ),
+    );
+  }
+
+  Widget _buildSettingsButton() {
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppRadius.lg),
+      side: const BorderSide(color: AppColors.divider, width: 1),
+    );
+
+    return Material(
+      color: AppColors.surface,
+      shape: shape,
+      child: InkWell(
+        onTap: onSettingsTap,
+        customBorder: shape,
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Tooltip(
+            message: AppStrings.settings,
             child: const Icon(
               IconsaxPlusLinear.setting_2,
               color: AppColors.textPrimary,
-              size: 20,
+              size: 21,
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

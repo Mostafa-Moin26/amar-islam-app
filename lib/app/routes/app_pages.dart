@@ -5,7 +5,6 @@ import '../bindings/main_shell_binding.dart';
 import '../navigation/main_shell_page.dart';
 import 'app_routes.dart';
 
-/// route নাম, পেজ ও binding-এর সংযোগ এখানে।
 abstract final class AppPages {
   static const String initial = AppRoutes.welcome;
 
