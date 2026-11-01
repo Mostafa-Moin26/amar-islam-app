@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import 'routes/app_pages.dart';
+import 'routes/app_routes.dart';
 import 'theme/app_theme.dart';
 
 class AmarIslamApp extends StatelessWidget {
@@ -7,26 +10,12 @@ class AmarIslamApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'আমার ইসলাম',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('আমার ইসলাম'),
-              const SizedBox(height: 16),
-              FilledButton(
-                onPressed: () {},
-                child: const Text('Testing Button'),
-              ),
-            ],
-          ),
-        ),
-      ),
+      initialRoute: AppRoutes.welcome,
+      getPages: AppPages.pages,
     );
   }
 }

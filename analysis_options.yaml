@@ -2,17 +2,17 @@ include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
-    # সব জায়গায় একই ধরনের quote ব্যবহার, পড়তে সুবিধা
+    
     prefer_single_quotes: true
-    # trailing comma থাকলে formatter widget tree সুন্দর সাজায়
+    
     require_trailing_commas: true
-    # release কোডে print থাকা উচিত নয়
+  
     avoid_print: true
-    # প্রতিটি ফাংশনের return type স্পষ্ট লেখা
+   
     always_declare_return_types: true
-    # যে local variable বদলায় না, সেটা final
+    
     prefer_final_locals: true
-    # async কাজের জন্য await ভুলে যাওয়া ধরা পড়বে
+   
     unawaited_futures: true
-    # import-এর ক্রম সুশৃঙ্খল রাখা
+    
     directives_ordering: true
