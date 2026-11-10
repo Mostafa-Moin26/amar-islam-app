@@ -13,6 +13,15 @@ class MainBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onDestinationSelected;
 
+  static const double _itemHeight = 55;
+  static const double _indicatorWidth = 45;
+  static const double _indicatorHeight = 32;
+  static const double _selectedIconSize = 24;
+  static const double _unselectedIconSize = 22;
+  static const double _labelFontSize = 11;
+
+  static const Duration _animationDuration = Duration(milliseconds: 220);
+
   static const List<_NavigationItem> _items = [
     _NavigationItem(
       label: 'হোম',
@@ -25,7 +34,7 @@ class MainBottomNavigationBar extends StatelessWidget {
       selectedIcon: IconsaxPlusBold.book_1,
     ),
     _NavigationItem(
-      label: 'দোয়া',
+      label: 'দোয়া',
       icon: IconsaxPlusLinear.heart,
       selectedIcon: IconsaxPlusBold.heart,
     ),
@@ -58,7 +67,7 @@ class MainBottomNavigationBar extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(6, 7, 6, 3),
+          padding: const EdgeInsets.fromLTRB(5, 8, 5, 4),
           child: Row(
             children: List.generate(_items.length, (index) {
               return Expanded(
@@ -87,8 +96,6 @@ class _NavigationDestination extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  static const Duration _animationDuration = Duration(milliseconds: 220);
-
   @override
   Widget build(BuildContext context) {
     final selectedColor = AppColors.deepGreen;
@@ -107,25 +114,25 @@ class _NavigationDestination extends StatelessWidget {
             splashColor: AppColors.primaryOverlay,
             highlightColor: AppColors.primaryOverlay,
             child: SizedBox(
-              height: 60,
+              height: MainBottomNavigationBar._itemHeight,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AnimatedContainer(
-                    duration: _animationDuration,
+                    duration: MainBottomNavigationBar._animationDuration,
                     curve: Curves.easeInOut,
-                    width: 44,
-                    height: 31,
+                    width: MainBottomNavigationBar._indicatorWidth,
+                    height: MainBottomNavigationBar._indicatorHeight,
                     decoration: BoxDecoration(
                       color: isSelected
                           ? AppColors.softSage
                           : Colors.transparent,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(13),
                     ),
                     alignment: Alignment.center,
                     child: AnimatedSwitcher(
-                      duration: _animationDuration,
+                      duration: MainBottomNavigationBar._animationDuration,
                       switchInCurve: Curves.easeOutBack,
                       switchOutCurve: Curves.easeIn,
                       transitionBuilder: (child, animation) {
@@ -140,18 +147,22 @@ class _NavigationDestination extends StatelessWidget {
                       child: Icon(
                         isSelected ? item.selectedIcon : item.icon,
                         key: ValueKey<bool>(isSelected),
-                        size: isSelected ? 23 : 22,
+                        size: isSelected
+                            ? MainBottomNavigationBar._selectedIconSize
+                            : MainBottomNavigationBar._unselectedIconSize,
                         color: isSelected ? selectedColor : unselectedColor,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 4),
+
+                  const SizedBox(height: 5),
+
                   AnimatedDefaultTextStyle(
-                    duration: _animationDuration,
+                    duration: MainBottomNavigationBar._animationDuration,
                     curve: Curves.easeInOut,
-                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                      fontSize: 11,
-                      height: 1.3,
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                      fontSize: MainBottomNavigationBar._labelFontSize,
+                      height: 1.4,
                       fontWeight: isSelected
                           ? FontWeight.w700
                           : FontWeight.w500,

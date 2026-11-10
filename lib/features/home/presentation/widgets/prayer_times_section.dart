@@ -2,115 +2,202 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_theme.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../home_dimensions.dart';
 import 'prayer_time_card.dart';
 
 class PrayerTimesSection extends StatelessWidget {
-  const PrayerTimesSection({super.key});
+  const PrayerTimesSection({
+    this.locationLabel = AppStrings.locationNotSet,
+    this.currentPrayer,
+    this.onDetailsTap,
+    super.key,
+  });
+
+  final String locationLabel;
+  final String? currentPrayer;
+  final VoidCallback? onDetailsTap;
+
+  static const List<_PrayerItem> _prayers = [
+    _PrayerItem(
+      name: AppStrings.prayerFajr,
+      icon: Icons.wb_twilight_rounded,
+      iconColor: AppColors.fajrPrayerIcon,
+      backgroundColor: AppColors.fajrPrayerBackground,
+    ),
+    _PrayerItem(
+      name: AppStrings.prayerDhuhr,
+      icon: Icons.wb_sunny_rounded,
+      iconColor: AppColors.dhuhrPrayerIcon,
+      backgroundColor: AppColors.dhuhrPrayerBackground,
+    ),
+    _PrayerItem(
+      name: AppStrings.prayerAsr,
+      icon: Icons.wb_sunny_outlined,
+      iconColor: AppColors.asrPrayerIcon,
+      backgroundColor: AppColors.asrPrayerBackground,
+    ),
+    _PrayerItem(
+      name: AppStrings.prayerMaghrib,
+      icon: Icons.wb_twilight_outlined,
+      iconColor: AppColors.maghribPrayerIcon,
+      backgroundColor: AppColors.maghribPrayerBackground,
+    ),
+    _PrayerItem(
+      name: AppStrings.prayerIsha,
+      icon: Icons.nightlight_round,
+      iconColor: AppColors.ishaPrayerIcon,
+      backgroundColor: AppColors.ishaPrayerBackground,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // হেডার রো: টাইটেল, লোকেশন এবং বিস্তারিত বাটন
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'আজকের নামাজের সময়',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                SizedBox(height: 3),
-                Row(
-                  children: [
-                    Icon(
-                      IconsaxPlusLinear.location,
-                      size: 13,
-                      color: AppColors.textSecondary,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppStrings.prayerTimesTitle,
+                    style: textTheme.titleMedium?.copyWith(
+                      fontSize: HomeDimensions.prayerTitleSize,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
                     ),
-                    SizedBox(width: 4),
-                    Text(
-                      'চট্টগ্রাম, বাংলাদেশ',
-                      style: TextStyle(
-                        fontSize: 12,
+                  ),
+
+                  const SizedBox(height: AppSpacing.xs),
+
+                  Row(
+                    children: [
+                      const Icon(
+                        IconsaxPlusLinear.location,
+                        size: 16,
                         color: AppColors.textSecondary,
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            // বিস্তারিত বাটন
-            InkWell(
-              onTap: () {
-                // নামাজের বিস্তারিত পেজ
-              },
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.softSage,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'বিস্তারিত',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.deepGreen,
+
+                      const SizedBox(width: AppSpacing.xs),
+
+                      Flexible(
+                        child: Text(
+                          locationLabel,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodySmall?.copyWith(
+                            fontSize: HomeDimensions.prayerLocationSize,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
             ),
+
+            const SizedBox(width: AppSpacing.sm),
+
+            _buildDetailsButton(context),
           ],
         ),
 
-        const SizedBox(height: 14),
+        const SizedBox(height: AppSpacing.lg),
 
-        // ৫ ওয়াক্তের কার্ড রো
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            PrayerTimeCard(
-              prayerName: 'ফজর',
-              time: '৪:১২',
-              icon: Icons.wb_twilight_rounded,
-            ),
-            PrayerTimeCard(
-              prayerName: 'যোহর',
-              time: '১১:৫৮',
-              icon: Icons.wb_sunny_rounded,
-              isCurrent: true, // যোহর ওয়াক্তটি অ্যাক্টিভ হিসেবে প্রদর্শিত
-            ),
-            PrayerTimeCard(
-              prayerName: 'আসর',
-              time: '৩:৪৫',
-              icon: Icons.wb_sunny_outlined,
-            ),
-            PrayerTimeCard(
-              prayerName: 'মাগরিব',
-              time: '৫:৫২',
-              icon: Icons.wb_twilight_outlined,
-            ),
-            PrayerTimeCard(
-              prayerName: 'এশা',
-              time: '৬:৪৮',
-              icon: Icons.nightlight_round,
-            ),
-          ],
+        SizedBox(
+          height: HomeDimensions.prayerCardHeight + 8,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            clipBehavior: Clip.none,
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            itemCount: _prayers.length,
+            separatorBuilder: (context, index) {
+              return const SizedBox(width: HomeDimensions.prayerCardSpacing);
+            },
+            itemBuilder: (context, index) {
+              final prayer = _prayers[index];
+
+              return SizedBox(
+                width: HomeDimensions.prayerCardWidth,
+                child: PrayerTimeCard(
+                  prayerName: prayer.name,
+                  time: AppStrings.prayerTimePlaceholder,
+                  icon: prayer.icon,
+                  iconColor: prayer.iconColor,
+                  iconBackgroundColor: prayer.backgroundColor,
+                  isCurrent: currentPrayer == prayer.name,
+                ),
+              );
+            },
+          ),
         ),
       ],
     );
   }
+
+  Widget _buildDetailsButton(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppRadius.md),
+    );
+
+    return Material(
+      color: AppColors.softSage,
+      shape: shape,
+      child: InkWell(
+        onTap: onDetailsTap,
+        customBorder: shape,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                AppStrings.prayerDetails,
+                style: textTheme.labelLarge?.copyWith(
+                  fontSize: 13,
+                  color: AppColors.deepGreen,
+                ),
+              ),
+
+              const SizedBox(width: AppSpacing.xs),
+
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 18,
+                color: AppColors.deepGreen,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PrayerItem {
+  const _PrayerItem({
+    required this.name,
+    required this.icon,
+    required this.iconColor,
+    required this.backgroundColor,
+  });
+
+  final String name;
+  final IconData icon;
+  final Color iconColor;
+  final Color backgroundColor;
 }

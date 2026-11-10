@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_theme.dart';
+import '../widgets/home_feature_grid.dart';
 import '../widgets/home_header.dart';
 import '../widgets/islamic_date_banner.dart';
 import '../widgets/prayer_times_section.dart';
@@ -14,23 +16,28 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.warmCream,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. Header
               const HomeHeader(),
-              const SizedBox(height: 16),
 
-              // 2. Islamic Date Banner
+              const SizedBox(height: AppSpacing.lg),
+
               const IslamicDateBanner(),
-              const SizedBox(height: 20),
 
-              // 3. Prayer Times Section
+              const SizedBox(height: AppSpacing.xl),
+
               const PrayerTimesSection(),
-              const SizedBox(height: 24),
 
-              // 4. Features Grid
+              const SizedBox(height: AppSpacing.xxl),
+
+              const HomeFeatureGrid(),
+
+              const SizedBox(height: AppSpacing.xxl),
             ],
           ),
         ),

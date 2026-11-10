@@ -120,4 +120,23 @@ abstract final class AppColors {
   static const Color islamicKnowledgeIcon = Color(0xFF5268CB);
   static const Color tasbihIcon = Color(0xFFC67B36);
   static const Color qiblaIcon = Color(0xFF138765);
+
+  // ============================================================
+  // Prayer Times ICON COLORS
+  // ============================================================
+
+  static const Color fajrPrayerBackground = Color(0xFFECEBFA);
+  static const Color fajrPrayerIcon = Color(0xFF6259A8);
+
+  static const Color dhuhrPrayerBackground = Color(0xFFFFF1D2);
+  static const Color dhuhrPrayerIcon = Color(0xFFB97812);
+
+  static const Color asrPrayerBackground = Color(0xFFFCE9DD);
+  static const Color asrPrayerIcon = Color(0xFFB85C2B);
+
+  static const Color maghribPrayerBackground = Color(0xFFF8E5E5);
+  static const Color maghribPrayerIcon = Color(0xFFB84F55);
+
+  static const Color ishaPrayerBackground = Color(0xFFE6ECF5);
+  static const Color ishaPrayerIcon = Color(0xFF49627F);
 }

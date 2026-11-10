@@ -4,6 +4,7 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../home_dimensions.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({this.onSettingsTap, super.key});
@@ -31,7 +32,7 @@ class HomeHeader extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: textTheme.titleMedium?.copyWith(
-                  fontSize: 17,
+                  fontSize: HomeDimensions.headerTitleSize,
                   fontWeight: FontWeight.w700,
                   color: AppColors.textPrimary,
                   height: 1.4,
@@ -45,7 +46,7 @@ class HomeHeader extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: textTheme.bodySmall?.copyWith(
-                  fontSize: 12,
+                  fontSize: HomeDimensions.headerSubtitleSize,
                   fontWeight: FontWeight.w400,
                   color: AppColors.textSecondary,
                   height: 1.4,
@@ -64,8 +65,8 @@ class HomeHeader extends StatelessWidget {
 
   Widget _buildAppIcon() {
     return Container(
-      width: 48,
-      height: 48,
+      width: HomeDimensions.headerIconSize,
+      height: HomeDimensions.headerIconSize,
       decoration: BoxDecoration(
         color: AppColors.softSage,
         shape: BoxShape.circle,
@@ -78,7 +79,7 @@ class HomeHeader extends StatelessWidget {
       child: const Icon(
         Icons.mosque_rounded,
         color: AppColors.deepGreen,
-        size: 25,
+        size: 28,
       ),
     );
   }
@@ -96,14 +97,14 @@ class HomeHeader extends StatelessWidget {
         onTap: onSettingsTap,
         customBorder: shape,
         child: SizedBox(
-          width: 44,
-          height: 44,
+          width: HomeDimensions.settingsButtonSize,
+          height: HomeDimensions.settingsButtonSize,
           child: Tooltip(
             message: AppStrings.settings,
             child: const Icon(
               IconsaxPlusLinear.setting_2,
               color: AppColors.textPrimary,
-              size: 21,
+              size: 23,
             ),
           ),
         ),
