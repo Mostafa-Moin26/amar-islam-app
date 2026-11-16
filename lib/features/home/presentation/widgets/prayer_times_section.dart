@@ -6,8 +6,12 @@ import '../../../../app/theme/app_theme.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../home_dimensions.dart';
 import 'prayer_time_card.dart';
+import 'package:get/get.dart';
 
-class PrayerTimesSection extends StatelessWidget {
+import 'package:amar_islam/features/prayer_times/domain/entities/prayer_times_entity.dart';
+import 'package:amar_islam/features/prayer_times/presentation/controllers/prayer_times_controller.dart';
+
+class PrayerTimesSection extends GetView<PrayerTimesController> {
   const PrayerTimesSection({
     this.locationLabel = AppStrings.locationNotSet,
     this.currentPrayer,
@@ -112,36 +116,63 @@ class PrayerTimesSection extends StatelessWidget {
 
         const SizedBox(height: AppSpacing.lg),
 
-        SizedBox(
-          height: HomeDimensions.prayerCardHeight + 8,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            clipBehavior: Clip.none,
-            padding: const EdgeInsets.symmetric(vertical: 3),
-            itemCount: _prayers.length,
-            separatorBuilder: (context, index) {
-              return const SizedBox(width: HomeDimensions.prayerCardSpacing);
-            },
-            itemBuilder: (context, index) {
-              final prayer = _prayers[index];
+        Obx(() {
+          final result = controller.prayerTimes.value;
 
-              return SizedBox(
-                width: HomeDimensions.prayerCardWidth,
-                child: PrayerTimeCard(
-                  prayerName: prayer.name,
-                  time: AppStrings.prayerTimePlaceholder,
-                  icon: prayer.icon,
-                  iconColor: prayer.iconColor,
-                  iconBackgroundColor: prayer.backgroundColor,
-                  isCurrent: currentPrayer == prayer.name,
-                ),
-              );
-            },
-          ),
-        ),
+          return SizedBox(
+            height: HomeDimensions.prayerCardHeight + 8,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              clipBehavior: Clip.none,
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              itemCount: _prayers.length,
+              separatorBuilder: (context, index) {
+                return const SizedBox(width: HomeDimensions.prayerCardSpacing);
+              },
+              itemBuilder: (context, index) {
+                final prayer = _prayers[index];
+
+                return SizedBox(
+                  width: HomeDimensions.prayerCardWidth,
+                  child: PrayerTimeCard(
+                    prayerName: prayer.name,
+                    time: _getPrayerTime(result, index),
+                    icon: prayer.icon,
+                    iconColor: prayer.iconColor,
+                    iconBackgroundColor: prayer.backgroundColor,
+                    isCurrent: currentPrayer == prayer.name,
+                  ),
+                );
+              },
+            ),
+          );
+        }),
       ],
     );
+  }
+
+  String _getPrayerTime(PrayerTimesEntity? result, int index) {
+    if (result == null) {
+      return AppStrings.prayerTimePlaceholder;
+    }
+
+    final prayerTime = switch (index) {
+      0 => result.fajr,
+      1 => result.dhuhr,
+      2 => result.asr,
+      3 => result.maghrib,
+      4 => result.isha,
+      _ => throw RangeError.index(index, _prayers, 'index'),
+    };
+
+    final hour = prayerTime.hour % 12 == 0 ? 12 : prayerTime.hour % 12;
+
+    final minute = prayerTime.minute.toString().padLeft(2, '0');
+
+    final period = prayerTime.hour >= 12 ? 'PM' : 'AM';
+
+    return '$hour:$minute $period';
   }
 
   Widget _buildDetailsButton(BuildContext context) {

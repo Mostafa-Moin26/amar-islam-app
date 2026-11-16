@@ -1,0 +1,13 @@
+Dataset: Bangladesh Administrative Divisions
+Publisher: open-admin-data
+
+Source:
+https://github.com/open-admin-data/bangladesh-administrative-divisions
+
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Dataset contains Bangladesh's administrative location records,
+including divisions, districts, and upazilas.
+
+The location coordinates are administrative reference coordinates
+and do not represent a user's precise device location.

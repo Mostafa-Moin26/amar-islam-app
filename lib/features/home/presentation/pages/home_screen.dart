@@ -31,7 +31,9 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: AppSpacing.xl),
 
-              const PrayerTimesSection(),
+              const PrayerTimesSection(
+                locationLabel: 'চট্টগ্রাম · পরীক্ষামূলক',
+              ),
 
               const SizedBox(height: AppSpacing.xxl),
 
