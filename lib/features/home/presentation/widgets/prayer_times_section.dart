@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../prayer_times/domain/entities/prayer_times_entity.dart';
+import '../../../prayer_times/presentation/controllers/prayer_times_controller.dart';
 import '../home_dimensions.dart';
 import 'prayer_time_card.dart';
-import 'package:get/get.dart';
-
-import 'package:amar_islam/features/prayer_times/domain/entities/prayer_times_entity.dart';
-import 'package:amar_islam/features/prayer_times/presentation/controllers/prayer_times_controller.dart';
 
 class PrayerTimesSection extends GetView<PrayerTimesController> {
   const PrayerTimesSection({
@@ -67,49 +66,63 @@ class PrayerTimesSection extends GetView<PrayerTimesController> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppStrings.prayerTimesTitle,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontSize: HomeDimensions.prayerTitleSize,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
+              child: Obx(() {
+                final location = controller.currentLocation.value;
+                final locationError = controller.locationErrorMessage.value;
 
-                  const SizedBox(height: AppSpacing.xs),
+                final label = location == null
+                    ? locationLabel
+                    : 'বর্তমান GPS অবস্থান';
 
-                  Row(
-                    children: [
-                      const Icon(
-                        IconsaxPlusLinear.location,
-                        size: 16,
-                        color: AppColors.textSecondary,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppStrings.prayerTimesTitle,
+                      style: textTheme.titleMedium?.copyWith(
+                        fontSize: HomeDimensions.prayerTitleSize,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
                       ),
-
-                      const SizedBox(width: AppSpacing.xs),
-
-                      Flexible(
-                        child: Text(
-                          locationLabel,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: textTheme.bodySmall?.copyWith(
-                            fontSize: HomeDimensions.prayerLocationSize,
-                            color: AppColors.textSecondary,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Row(
+                      children: [
+                        const Icon(
+                          IconsaxPlusLinear.location,
+                          size: 16,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Flexible(
+                          child: Text(
+                            label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: textTheme.bodySmall?.copyWith(
+                              fontSize: HomeDimensions.prayerLocationSize,
+                              color: AppColors.textSecondary,
+                            ),
                           ),
+                        ),
+                      ],
+                    ),
+                    if (locationError != null) ...[
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        locationError,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
                         ),
                       ),
                     ],
-                  ),
-                ],
-              ),
+                  ],
+                );
+              }),
             ),
-
-            const SizedBox(width: AppSpacing.sm),
-
+            const SizedBox(width: AppSpacing.xs),
+            _buildLocationButton(),
+            const SizedBox(width: AppSpacing.xs),
             _buildDetailsButton(context),
           ],
         ),
@@ -118,38 +131,93 @@ class PrayerTimesSection extends GetView<PrayerTimesController> {
 
         Obx(() {
           final result = controller.prayerTimes.value;
+          final calculationError = controller.errorMessage.value;
 
-          return SizedBox(
-            height: HomeDimensions.prayerCardHeight + 8,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              clipBehavior: Clip.none,
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              itemCount: _prayers.length,
-              separatorBuilder: (context, index) {
-                return const SizedBox(width: HomeDimensions.prayerCardSpacing);
-              },
-              itemBuilder: (context, index) {
-                final prayer = _prayers[index];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: HomeDimensions.prayerCardHeight + 8,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  clipBehavior: Clip.none,
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  itemCount: _prayers.length,
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(
+                      width: HomeDimensions.prayerCardSpacing,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    final prayer = _prayers[index];
 
-                return SizedBox(
-                  width: HomeDimensions.prayerCardWidth,
-                  child: PrayerTimeCard(
-                    prayerName: prayer.name,
-                    time: _getPrayerTime(result, index),
-                    icon: prayer.icon,
-                    iconColor: prayer.iconColor,
-                    iconBackgroundColor: prayer.backgroundColor,
-                    isCurrent: currentPrayer == prayer.name,
+                    return SizedBox(
+                      width: HomeDimensions.prayerCardWidth,
+                      child: PrayerTimeCard(
+                        prayerName: prayer.name,
+                        time: _getPrayerTime(result, index),
+                        icon: prayer.icon,
+                        iconColor: prayer.iconColor,
+                        iconBackgroundColor: prayer.backgroundColor,
+                        isCurrent: currentPrayer == prayer.name,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              if (calculationError != null) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  calculationError,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
                   ),
-                );
-              },
-            ),
+                ),
+              ],
+            ],
           );
         }),
       ],
     );
+  }
+
+  Widget _buildLocationButton() {
+    return Obx(() {
+      final isLoading = controller.isLocationLoading.value;
+
+      return Tooltip(
+        message: 'GPS দিয়ে বর্তমান অবস্থান নিন',
+        child: Material(
+          color: AppColors.softSage,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            onTap: isLoading ? null : () => controller.loadCurrentLocation(),
+            child: SizedBox(
+              width: 44,
+              height: 44,
+              child: Center(
+                child: isLoading
+                    ? const SizedBox(
+                        width: 19,
+                        height: 19,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.deepGreen,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.my_location_rounded,
+                        color: AppColors.deepGreen,
+                        size: 21,
+                      ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   String _getPrayerTime(PrayerTimesEntity? result, int index) {
@@ -163,13 +231,12 @@ class PrayerTimesSection extends GetView<PrayerTimesController> {
       2 => result.asr,
       3 => result.maghrib,
       4 => result.isha,
-      _ => throw RangeError.index(index, _prayers, 'index'),
+      _ => throw RangeError.index(index, _prayers),
     };
 
     final hour = prayerTime.hour % 12 == 0 ? 12 : prayerTime.hour % 12;
 
     final minute = prayerTime.minute.toString().padLeft(2, '0');
-
     final period = prayerTime.hour >= 12 ? 'PM' : 'AM';
 
     return '$hour:$minute $period';
@@ -203,9 +270,7 @@ class PrayerTimesSection extends GetView<PrayerTimesController> {
                   color: AppColors.deepGreen,
                 ),
               ),
-
               const SizedBox(width: AppSpacing.xs),
-
               const Icon(
                 Icons.chevron_right_rounded,
                 size: 18,
